@@ -14,10 +14,10 @@ import KeychainAccess
 
 class APIManager: SessionManager {
     
-    // MARK: TODO: Add App Keys
-    static let consumerKey = "YOUR_KEY_HERE"
-    static let consumerSecret = "YOUR_SECRET_HERE"
+    // Get these API by creating an account with https://developer.twitter.com/en/apps/
+    
 
+    //These are for codepath Twitter Demo, yours look different
     static let requestTokenURL = "https://api.twitter.com/oauth/request_token"
     static let authorizeURL = "https://api.twitter.com/oauth/authorize"
     static let accessTokenURL = "https://api.twitter.com/oauth/access_token"
@@ -34,17 +34,19 @@ class APIManager: SessionManager {
             // Save Oauth tokens
             self.save(credential: credential)
             
-            self.getCurrentAccount(completion: { (user, error) in
+            self.getCurrentAccount { (user, error) in
                 if let error = error {
+                    print("Que error? : ")
                     failure(error)
                 } else if let user = user {
-                    print("Welcome \(user.name)")
+                    User.current = user//used to set current user, from a static func
+                    print("Welcome \(String(describing: user.name))")
                     
                     // MARK: TODO: set User.current, so that it's persisted
                     
                     success()
                 }
-            })
+            }
         }) { (error) in
             failure(error)
         }
@@ -108,6 +110,16 @@ class APIManager: SessionManager {
                     completion(tweets, nil)
                 }
         }
+    }//getHomeTimeLine()
+    
+    static func logout() {
+        // 1. Clear current user
+        User.current = nil
+        
+        // TODO: 2. Deauthorize OAuth tokens
+        
+        // 3. Post logout notification
+        NotificationCenter.default.post(name: NSNotification.Name("didLogout"), object: nil)
     }
     
     // MARK: TODO: Favorite a Tweet

@@ -10,6 +10,9 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
+    /*******************************************
+     * UIVIEW CONTROLLER LIFECYCLES FUNCTIONS *
+     *******************************************/
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,7 +27,9 @@ class LoginViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    
+    /***********************
+     * @IBACTION FUNCTIONS *
+     ***********************/
     @IBAction func didTapLogin(_ sender: Any) {
         APIManager.shared.login(success: {
             self.performSegue(withIdentifier: "loginSegue", sender: nil)

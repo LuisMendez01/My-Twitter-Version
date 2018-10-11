@@ -16,7 +16,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        //checking if there is a current user logged in
+        print("Current User: \(String(describing: User.current))")
+        if User.current != nil {
+            
+            // Load and show the login view controller
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let homeTimelineViewController = storyboard.instantiateViewController(withIdentifier: "TimelineViewController") as! TimelineViewController
+            let navigationController = UINavigationController(rootViewController:  homeTimelineViewController)
+            window!.rootViewController = navigationController
+        }
+        
         // MARK: TODO: Check for logged in user
+        NotificationCenter.default.addObserver(forName: Notification.Name("didLogout"), object: nil, queue: OperationQueue.main) { (Notification) in
+            print("Logout notification received")
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController
+            self.window?.rootViewController = loginViewController
+            
+        }
         
         return true
     }
