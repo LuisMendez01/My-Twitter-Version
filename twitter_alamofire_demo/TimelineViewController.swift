@@ -12,7 +12,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBOutlet weak var tableView: UITableView!
     
-    var movies: [Tweet] = []//get tweets
+    var Tweets: [Tweet] = []//get tweets
     
     /*******************************************
      * UIVIEW CONTROLLER LIFECYCLES FUNCTIONS *
@@ -33,6 +33,9 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         //tableView.rowHeight = 200
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 50
+        
+        //fetch data
+        fetchData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -40,11 +43,20 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         // Dispose of any resources that can be recreated.
     }
     
+    func fetchData(){
+    
+        APIManager.shared.getHomeTimeLine(){ Tweets, error in
+            
+            self.Tweets = Tweets!
+        }
+    }
+    
     /***********************
      * TableView functions *
      ***********************/
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        print("In TimelineVC - Tweets.count = \(Tweets.count)")
+        return Tweets.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -65,7 +77,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         //this code changes color of all cells
         cell.contentView.backgroundColor = #colorLiteral(red: 0.6156862745, green: 0.6745098039, blue: 0.7490196078, alpha: 1)
         
-        cell.tweetLabel.text = "Cell"//(posts[indexPath.row])
+        cell.tweetLabel.text = Tweets[indexPath.row].text
         
         return cell
     }

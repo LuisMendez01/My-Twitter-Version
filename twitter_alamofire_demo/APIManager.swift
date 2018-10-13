@@ -15,8 +15,11 @@ import KeychainAccess
 class APIManager: SessionManager {
     
     // Get these API by creating an account with https://developer.twitter.com/en/apps/
-    static let consumerKey = "x"//(My-API_KEY)
-    static let consumerSecret = "x"//(My API secret key)
+    /*
+     static let consumerKey = "x"//(My-API_KEY)
+     static let consumerSecret = "x"//(My API secret key)
+     */
+    
 
     //These are for codepath Twitter Demo, yours look different
     static let requestTokenURL = "https://api.twitter.com/oauth/request_token"
@@ -77,11 +80,18 @@ class APIManager: SessionManager {
         // This uses tweets from disk to avoid hitting rate limit. Comment out if you want fresh
         // tweets,
         if let data = UserDefaults.standard.object(forKey: "hometimeline_tweets") as? Data {
+            //This will contain each tweet info and on print it'll display info like it did with the movies and tumblr project, all the info many things
             let tweetDictionaries = NSKeyedUnarchiver.unarchiveObject(with: data) as! [[String: Any]]
+            print("tweetDictionaries")
+            print(tweetDictionaries)
+            //This flatMap will extract each item of array and make it a Tweet which will
+            //only save things we need from the Tweet class and return that Tweet 1 by 1
+            //then tweets will contain an array of Tweets with info we only need
             let tweets = tweetDictionaries.flatMap({ (dictionary) -> Tweet in
                 Tweet(dictionary: dictionary)
             })
-
+            print("Tweets")
+            print(tweets)
             completion(tweets, nil)
             return
         }
