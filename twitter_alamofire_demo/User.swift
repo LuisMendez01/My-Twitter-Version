@@ -27,13 +27,13 @@ class User: NSObject {
         get {
             //_current is always nil at the start app but
             if _current == nil {
-                print("_current == nil: \(String(describing: _current))")
+                print("In User CLass _current == nil: \(String(describing: _current))")
                 //if user defaults has data then create dict with that and create new User
                 let defaults = UserDefaults.standard
                 if let userData = defaults.data(forKey: "currentUserData") {
                     let dictionary = try! JSONSerialization.jsonObject(with: userData, options: []) as! [String: Any]
                     _current = User(dictionary: dictionary)
-                    print("Under get current adding defaults.data UserDefaults")
+                    print("In User Class Under get current adding defaults.data UserDefaults")
                 }
             }
             //if UserDefaults was not empty it returns a user otherwise returns nil
@@ -45,12 +45,12 @@ class User: NSObject {
             if let user = user {
                 let data = try! JSONSerialization.data(withJSONObject: user.dictionary!, options: [])
                 defaults.set(data, forKey: "currentUserData")
-                print("Under set current User set current User to UserDefaults")
+                print("In User Class Under set current User set current User to UserDefaults")
             } else {
-                print("Under set current User removeObject UserDefaults")
+                print("In User Class Under set current User removeObject UserDefaults")
                 //if user is nil meaning no user encounter then erase it
-                //probably used if manually set it nil or if logged user does not exist
-                //but then there will be an error in oauthManager.authorize() func APIManager.swift
+                //User.current is going to equal to nil when user logs out and
+                //UserDefault will be remove
                 defaults.removeObject(forKey: "currentUserData")
             }
         }

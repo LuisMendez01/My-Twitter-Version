@@ -15,7 +15,8 @@ import KeychainAccess
 class APIManager: SessionManager {
     
     // Get these API by creating an account with https://developer.twitter.com/en/apps/
-    
+    static let consumerKey = "x"//(My-API_KEY)
+    static let consumerSecret = "x"//(My API secret key)
 
     //These are for codepath Twitter Demo, yours look different
     static let requestTokenURL = "https://api.twitter.com/oauth/request_token"
@@ -40,7 +41,7 @@ class APIManager: SessionManager {
                     failure(error)
                 } else if let user = user {
                     User.current = user//used to set current user, from a static func
-                    print("Welcome \(String(describing: user.name))")
+                    print("In APIManager login func Welcome \(String(describing: user.name))")
                     
                     // MARK: TODO: set User.current, so that it's persisted
                     
@@ -112,9 +113,11 @@ class APIManager: SessionManager {
         }
     }//getHomeTimeLine()
     
-    static func logout() {
+    static func logOut() {
         // 1. Clear current user
         User.current = nil
+        
+        print("In APIManager setting User.current = nil Logout notification received")
         
         // TODO: 2. Deauthorize OAuth tokens
         

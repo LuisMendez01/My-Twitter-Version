@@ -12,6 +12,8 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBOutlet weak var tableView: UITableView!
     
+    var movies: [Tweet] = []//get tweets
+    
     /*******************************************
      * UIVIEW CONTROLLER LIFECYCLES FUNCTIONS *
      *******************************************/
@@ -21,6 +23,12 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        //make UITableViewCell separators go edge to edge
+        //line will be farther away from edge of the left than of the right
+        tableView.layoutMargins = UIEdgeInsets.zero
+        tableView.separatorInset = UIEdgeInsets.zero
+        //also include one more code of line in cellForRowAt, commented with a hashtag
         
         //tableView.rowHeight = 200
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -42,6 +50,9 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tweetCell", for: indexPath) as! TweetViewCell
         
+        //# goes with two lines of code in the viewDidLoad
+        cell.layoutMargins = UIEdgeInsets.zero
+        
         // No color when the user selects cell
         //cell.selectionStyle = .none
         
@@ -54,9 +65,12 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         //this code changes color of all cells
         cell.contentView.backgroundColor = #colorLiteral(red: 0.6156862745, green: 0.6745098039, blue: 0.7490196078, alpha: 1)
         
-        cell.tweetLabel.text = "Que!"//"\(posts[indexPath.row])"
+        cell.tweetLabel.text = "Cell"//(posts[indexPath.row])
         
         return cell
     }
 
+    @IBAction func logOutAction(_ sender: Any) {
+         APIManager.logOut()
+    }
 }
