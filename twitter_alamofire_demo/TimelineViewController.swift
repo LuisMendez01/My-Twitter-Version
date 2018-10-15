@@ -15,6 +15,8 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     var Tweets: [Tweet] = []//get tweets
     
     var refreshControl: UIRefreshControl!//! means better not be null or else crashes
+    var isMoreDataLoading = false//to make sure data has already been loaded
+    var loadingMoreView:InfiniteScrollActivityView?//for infinite scrolling refreshing
     
     /*******************************************
      * UIVIEW CONTROLLER LIFECYCLES FUNCTIONS *
@@ -43,6 +45,16 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         // add refreshControl to tableView
         tableView.insertSubview(refreshControl, at: 0)//0 means it will show on the top
         
+        /*********Load more infinite scrolling refresh*******/
+        let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+        loadingMoreView = InfiniteScrollActivityView(frame: frame)
+        loadingMoreView!.isHidden = true
+        tableView.addSubview(loadingMoreView!)
+        
+        /*********Load more infinite scrolling refresh*******/
+        var insets = tableView.contentInset//inset is 0 all four sides by default
+        insets.bottom += InfiniteScrollActivityView.defaultHeight//set it to height of InfiniteScrollActivityView's height so it will be visible
+        tableView.contentInset = insets
         //fetch data
         fetchData()
     }
@@ -57,10 +69,14 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         APIManager.shared.getHomeTimeLine(){ Tweets, error in
             
             self.Tweets = Tweets!
-            self.tableView.reloadData()
             
-            // Tell the refreshControl to stop spinning
-            self.refreshControl.endRefreshing()
+            //DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                //allow to fetch again once this is false from DidScroll function
+                // Tell the refreshControl to stop spinning
+                self.refreshControl.endRefreshing()
+                self.isMoreDataLoading = false
+                self.tableView.reloadData()
+            //}
             print("In TimelineViewController:\(Tweet.count)")
         }
     }
@@ -73,6 +89,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // change 2 to desired number of seconds
             // Your code with delay
+            limit -= 20
             self.fetchData()//get now playing movies from the APIs
         }
     }
@@ -110,5 +127,36 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
 
     @IBAction func logOutAction(_ sender: Any) {
          APIManager.logOut()
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // Handle scroll behavior here
+        if (!isMoreDataLoading) {
+            // Calculate the position of one screen length before the bottom of the results
+            let scrollViewContentHeight = tableView.contentSize.height//size of content of whole table, all data requested
+            let phoneFrame = tableView.frame.height//height of the phone
+            let scrollOffsetThreshold = scrollViewContentHeight - phoneFrame//when reached end of
+            
+            // When the user has scrolled past the threshold, start requesting
+            if(scrollView.contentOffset.y > (scrollOffsetThreshold) && tableView.isDragging) {
+                
+                print("beginBatchFetch")
+                
+                isMoreDataLoading = true
+                
+                // Update position of loadingMoreView, and start loading indicator
+                //width same as table width, height same as default indicator
+                //position x start from the very most left and y start right after the table end
+                let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+                
+                loadingMoreView?.frame = frame//this is how big indicator will be and positioned
+                loadingMoreView!.startAnimating()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    // Code to load more results
+                    self.fetchData()
+                }
+            }
+        }
     }
 }

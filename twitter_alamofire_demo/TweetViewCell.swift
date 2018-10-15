@@ -48,8 +48,10 @@ class TweetViewCell: UITableViewCell {
                 completion: (nil)
             )
             
-            tweetLabel.numberOfLines = 0
-            tweetLabel.enabledTypes = [.mention, .hashtag, .url]
+            //The tweet description
+            tweetLabel.numberOfLines = 0//to wrap around text
+            tweetLabel.enabledTypes = [.mention, .hashtag, .url]//this is default
+            tweetLabel.urlMaximumLength = 15
             
             
             tweetLabel.customize { label in
@@ -68,14 +70,10 @@ class TweetViewCell: UITableViewCell {
             }
             
             tweetLabel.handleURLTap { url in UIApplication.shared.open(url, options: [:], completionHandler: nil)}
-            /*
-            label.handleCustomTap(for: customType) { element in
-                print("Custom type tapped: \(element)")
-            }*/
             
-            tweetLabel.urlMaximumLength = 15
-            //tweetLabel.text = label.text
- 
+//            label.handleCustomTap(for: customType) { element in
+//                print("Custom type tapped: \(element)")
+//            }
         }
     }
     

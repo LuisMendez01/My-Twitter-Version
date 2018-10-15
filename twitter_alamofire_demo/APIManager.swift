@@ -12,6 +12,7 @@ import OAuthSwift
 import OAuthSwiftAlamofire
 import KeychainAccess
 
+var limit: Int = 0//will keep track of posts request for infinite scrolling and refresh
 class APIManager: SessionManager {
     
     // Get these API by creating an account with https://developer.twitter.com/en/apps/
@@ -76,7 +77,7 @@ class APIManager: SessionManager {
         
     func getHomeTimeLine(completion: @escaping ([Tweet]?, Error?) -> ()) {
 
-        // This uses tweets from disk to avoid hitting rate limit. Comment out if you want fresh
+        // This uses tweets from disk to avoid hitting 15min rate limit of 15 posts. Comment out if you want fresh
         // tweets,
         if let data = UserDefaults.standard.object(forKey: "hometimeline_tweets") as? Data {
             //This will contain each tweet info and on print it'll display info like it did with the movies and tumblr project, all the info many things
@@ -94,8 +95,10 @@ class APIManager: SessionManager {
             completion(tweets, nil)
             return
         }
-
-        request(URL(string: "https://api.twitter.com/1.1/statuses/home_timeline.json")!, method: .get)
+        
+        limit += 20
+        let parameters = ["count": limit]
+        request(URL(string: "https://api.twitter.com/1.1/statuses/home_timeline.json")!,  method: .get, parameters: parameters as Parameters)
             .validate()
             .responseJSON { (response) in
                 switch response.result {
