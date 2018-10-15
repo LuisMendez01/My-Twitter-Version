@@ -48,8 +48,8 @@ class Tweet: NSObject {
         retweeted = dictionary["retweeted"] as? Bool
         
         //Profile image
-        if let profileImageString = dictionary["profile_image_url"] as? URL {
-            profileImageUrl = profileImageString
+        if let profileImageString = dictionary["user"] as? [String : Any] {
+            profileImageUrl = URL(string: profileImageString["profile_image_url_https"] as! String)
         }
         
         // Format createdAt date string

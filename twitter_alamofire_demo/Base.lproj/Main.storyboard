@@ -82,6 +82,7 @@
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile-Icon" translatesAutoresizingMaskIntoConstraints="NO" id="5a6-49-cOs">
                                                     <rect key="frame" x="6" y="10" width="50" height="50"/>
+                                                    <color key="backgroundColor" red="0.82745098039999998" green="0.87843137250000003" blue="0.89019607840000003" alpha="0.92000000000000004" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="Or1-D5-1fa"/>
                                                         <constraint firstAttribute="height" constant="50" id="eVQ-Ir-uQg"/>
