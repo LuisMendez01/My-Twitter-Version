@@ -8,11 +8,12 @@
 
 import UIKit
 import AlamofireImage
+import ActiveLabel
 
 class TweetViewCell: UITableViewCell {
 
     @IBOutlet weak var profileImageView: UIImageView!
-    @IBOutlet weak var tweetLabel: UILabel!
+    @IBOutlet weak var tweetLabel: ActiveLabel!
     @IBOutlet weak var favoriteCountLabel: UILabel!
     @IBOutlet weak var retweetCountLabel: UILabel!
     @IBOutlet weak var authorNameLabel: UILabel!
@@ -27,7 +28,6 @@ class TweetViewCell: UITableViewCell {
             authorNameLabel.text = Tweet.user?.name
             usernameLabel.text = ("@\(Tweet.user?.screenName ?? "ScreenName")")
             createdAtLabel.text = Tweet.createdAtString
-            tweetLabel.text = Tweet.text
             retweetCountLabel.text = "\(Tweet.retweetCount ?? -1)"
             favoriteCountLabel.text = "\(Tweet.favoriteCount ?? -1)"
             
@@ -47,6 +47,34 @@ class TweetViewCell: UITableViewCell {
                 withURL: Tweet.profileImageUrl!,
                 completion: (nil)
             )
+            
+            tweetLabel.numberOfLines = 0
+            tweetLabel.enabledTypes = [.mention, .hashtag, .url]
+            
+            
+            tweetLabel.customize { label in
+                label.text = Tweet.text
+                label.textColor = .black
+                label.hashtagColor = #colorLiteral(red: 0.2609414458, green: 0.2709193528, blue: 0.4761442542, alpha: 1)
+                label.mentionColor = #colorLiteral(red: 0.1960784346, green: 0.3411764801, blue: 0.1019607857, alpha: 1)
+                label.URLColor = #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1)
+                //label.handleMentionTap { self.alert("Mention", message: $0) }
+                //label.handleHashtagTap { self.alert("Hashtag", message: $0) }
+                //label.handleURLTap { self.alert("URL", message: $0.absoluteString) }
+            }
+            
+            tweetLabel.handleHashtagTap { hashtag in
+                print("Success. You just tapped the \(hashtag) hashtag")
+            }
+            
+            tweetLabel.handleURLTap { url in UIApplication.shared.open(url, options: [:], completionHandler: nil)}
+            /*
+            label.handleCustomTap(for: customType) { element in
+                print("Custom type tapped: \(element)")
+            }*/
+            
+            tweetLabel.urlMaximumLength = 15
+            //tweetLabel.text = label.text
  
         }
     }

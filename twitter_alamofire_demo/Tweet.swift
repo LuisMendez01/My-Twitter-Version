@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import DateToolsSwift
 
 class Tweet: NSObject {
     
@@ -59,11 +60,15 @@ class Tweet: NSObject {
         formatter.dateFormat = "E MMM d HH:mm:ss Z y"
         // Convert String to Date
         let date = formatter.date(from: createdAtOriginalString)!
+        
         // Configure output format
-        formatter.dateStyle = .short
-        formatter.timeStyle = .none
+        //formatter.dateStyle = .short
+        //formatter.timeStyle = .none
         // Convert Date to String and set the createdAtString property
-        createdAtString = formatter.string(from: date)
+        //createdAtString = formatter.string(from: date)
+        
+        let dateNow = Date()
+        createdAtString = date.shortTimeAgo(since: dateNow)
     }
     
     //returns Tweets when initialized with an array of Tweet Dictionaries

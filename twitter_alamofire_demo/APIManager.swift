@@ -19,6 +19,7 @@ class APIManager: SessionManager {
      static let consumerKey = "x"//(My-API_KEY)
      static let consumerSecret = "x"//(My API secret key)
      */
+
     //These are for codepath Twitter Demo, yours look different
     static let requestTokenURL = "https://api.twitter.com/oauth/request_token"
     static let authorizeURL = "https://api.twitter.com/oauth/authorize"
