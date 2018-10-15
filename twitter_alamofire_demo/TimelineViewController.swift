@@ -14,6 +14,8 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     
     var Tweets: [Tweet] = []//get tweets
     
+    var refreshControl: UIRefreshControl!//! means better not be null or else crashes
+    
     /*******************************************
      * UIVIEW CONTROLLER LIFECYCLES FUNCTIONS *
      *******************************************/
@@ -34,6 +36,13 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 50
         
+        // Initialize a UIRefreshControl
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(TimelineViewController.didPullToRefresh(_:)), for: .valueChanged)
+        
+        // add refreshControl to tableView
+        tableView.insertSubview(refreshControl, at: 0)//0 means it will show on the top
+        
         //fetch data
         fetchData()
     }
@@ -48,6 +57,23 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         APIManager.shared.getHomeTimeLine(){ Tweets, error in
             
             self.Tweets = Tweets!
+            self.tableView.reloadData()
+            
+            // Tell the refreshControl to stop spinning
+            self.refreshControl.endRefreshing()
+            print("In TimelineViewController:\(Tweet.count)")
+        }
+    }
+    
+    @objc func didPullToRefresh(_ refreshControl: UIRefreshControl){
+        
+        //remove cookie that stored the 20 tweeters first downloaded
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "hometimeline_tweets")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // change 2 to desired number of seconds
+            // Your code with delay
+            self.fetchData()//get now playing movies from the APIs
         }
     }
     
@@ -70,14 +96,14 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         
         // Use a Dark blue color when the user selects the cell
         let backgroundView = UIView()
-        backgroundView.backgroundColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        backgroundView.backgroundColor = #colorLiteral(red: 0.6013489962, green: 0.6768889427, blue: 0.7566809058, alpha: 1)
         cell.selectedBackgroundView = backgroundView
         
         
         //this code changes color of all cells
-        cell.contentView.backgroundColor = #colorLiteral(red: 0.6156862745, green: 0.6745098039, blue: 0.7490196078, alpha: 1)
+        cell.contentView.backgroundColor = #colorLiteral(red: 0.8153101802, green: 0.8805506825, blue: 0.8921775818, alpha: 0.92)
         
-        cell.tweetLabel.text = Tweets[indexPath.row].text
+        cell.Tweet = Tweets[indexPath.row]
         
         return cell
     }

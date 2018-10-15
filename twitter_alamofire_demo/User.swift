@@ -37,6 +37,7 @@ class User: NSObject {
                 }
             }
             //if UserDefaults was not empty it returns a user otherwise returns nil
+            print("In Get return _current is : \(String(describing: _current))" )
             return _current
         }
         set (user) {

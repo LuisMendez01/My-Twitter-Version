@@ -19,7 +19,8 @@ class APIManager: SessionManager {
      static let consumerKey = "x"//(My-API_KEY)
      static let consumerSecret = "x"//(My API secret key)
      */
-    
+    static let consumerKey = "uFTmFW66AAMEUwx3rZlZDMSCf"//"ZJQWm33z9gKKErLTBlFJsVJoI"//(My-API_KEY)
+    static let consumerSecret = "LtlxIoQpBvHcqjpSMIA9Gs2E9wCJbr7xkx9EpSdBYoNedaZUgh"//"ssYeCiDopq2yebj1wu0N8aOUNFPJWOBHXAWPGSYN6rK2o1OEWL"//(My API secret key)
 
     //These are for codepath Twitter Demo, yours look different
     static let requestTokenURL = "https://api.twitter.com/oauth/request_token"
@@ -122,6 +123,33 @@ class APIManager: SessionManager {
                 }
         }
     }//getHomeTimeLine()
+    
+    func favoriteOrRetweet(_ tweet: Tweet, _ urlString: String, completion: @escaping (Tweet?, Error?) -> ()) {
+        //let urlString = "https://api.twitter.com/1.1/favorites/create.json"
+        let parameters = ["id": tweet.id]
+        request(urlString, method: .post, parameters: parameters as Parameters, encoding: URLEncoding.queryString).validate().responseJSON { (response) in
+            if response.result.isSuccess,
+                let tweetDictionary = response.result.value as? [String: Any] {
+                let tweet = Tweet(dictionary: tweetDictionary)
+                completion(tweet, nil)
+            } else {
+                completion(nil, response.result.error)
+            }
+        }
+    }
+    //Get
+    func get_id_of_retweet(_ urlString: String, completion: @escaping (Tweet?, Error?) -> ()) {
+        
+        request(urlString, method: .get, encoding: URLEncoding.queryString).validate().responseJSON { (response) in
+            if response.result.isSuccess,
+                let tweetDictionary = response.result.value as? [String: Any] {
+                let tweet = Tweet(dictionary: tweetDictionary)
+                completion(tweet, nil)
+            } else {
+                completion(nil, response.result.error)
+            }
+        }
+    }
     
     static func logOut() {
         // 1. Clear current user

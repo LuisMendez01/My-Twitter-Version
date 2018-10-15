@@ -18,33 +18,40 @@ class Tweet: NSObject {
     var retweeted: Bool? // Configure retweet button
     var user: User? // Author of the Tweet
     var createdAtString: String? // String representation of date posted
+    var profileImageUrl: URL? // String representation of date posted
     
     // For Retweets
     var retweetedByUser: User?  // user who retweeted if tweet is retweet
+    static var count = 0
 
     init(dictionary: [String : Any]){
         //super.init()
         var dictionary = dictionary
         
         // Is this a re-tweet?
+        //when retweeting a re-tweeted tweet, we will find the original tweet under the
+        //field retweeted_status, get id_str instead as id is too long
         if let originalTweet = dictionary["retweeted_status"] as? [String: Any] {
             let userDictionary = dictionary["user"] as! [String: Any]
             self.retweetedByUser = User(dictionary: userDictionary)
-            
+            Tweet.count += 1
             // Change tweet to original tweet
             dictionary = originalTweet
         }
         
         id = dictionary["id"] as? Int
+        user = User(dictionary: dictionary["user"] as! [String : Any])
         text = dictionary["text"] as? String
         favoriteCount = dictionary["favorite_count"] as? Int
         favorited = dictionary["favorited"] as? Bool
         retweetCount = dictionary["retweet_count"] as? Int
         retweeted = dictionary["retweeted"] as? Bool
         
-        // TODO: initialize user
+        //Profile image
+        if let profileImageString = dictionary["profile_image_url"] as? URL {
+            profileImageUrl = profileImageString
+        }
         
-        // TODO: Format and set createdAtString
         // Format createdAt date string
         let createdAtOriginalString = dictionary["created_at"] as! String
         let formatter = DateFormatter()
