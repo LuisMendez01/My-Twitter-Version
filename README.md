@@ -41,7 +41,11 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<div style="display: inline-block;">
+<img float="left" width="320" height="600" src='https://user-images.githubusercontent.com/16315708/46993869-b5222b80-d0df-11e8-8070-1361cb537a77.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img float="left" width="320" height="600" src='https://user-images.githubusercontent.com/16315708/46993885-ca975580-d0df-11e8-947b-11a3aa82d5c8.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img float="right" width="320" height="600" src='https://user-images.githubusercontent.com/16315708/46993969-337ecd80-d0e0-11e8-8ae8-1445fe051420.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<div/>
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
