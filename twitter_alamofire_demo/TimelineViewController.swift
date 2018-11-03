@@ -159,4 +159,16 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        // Get the index path from the cell that was tapped
+        let indexPath = tableView.indexPathForSelectedRow
+        // Get the Row of the Index Path and set as index
+        let index = indexPath?.row
+        // Get in touch with the DetailViewController
+        let detailViewController = segue.destination as! DetailViewController
+        // Pass on the data to the Detail ViewController by setting it's indexPathRow value
+        detailViewController.Tweet = Tweets[index!]
+    }
 }
